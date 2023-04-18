@@ -20,6 +20,7 @@ def add_extrinsic_noise(extrinsic):
     euler_angles = np.random.normal(0, 0.002, 3)
     R = Rotation.from_euler("xyz", euler_angles).as_matrix()
     extrinsic[:3, :3] = R @ extrinsic[:3, :3]
+    return extrinsic
 
 
 if __name__ == '__main__':
@@ -31,7 +32,7 @@ if __name__ == '__main__':
         elif k.startswith("world_points"):
             noise_data[k] = add_points_noise(data[k])
         elif k.startswith("extrinsic"):
-            add_extrinsic_noise(noise_data[k])
+            noise_data[k] = add_extrinsic_noise(data[k])
         print(noise_data[k])
 
     pkl.dump(noise_data, open("noise_data.pkl", "wb"))
